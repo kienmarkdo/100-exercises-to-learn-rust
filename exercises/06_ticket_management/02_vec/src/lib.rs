@@ -1,3 +1,5 @@
+use core::num;
+
 // Given a number `n`, return the `n+1`th number in the Fibonacci sequence.
 //
 // The Fibonacci sequence is defined as follows:
@@ -15,7 +17,19 @@ pub fn fibonacci(n: u32) -> u32 {
     //
     // Hint: use a `Vec` to memoize the results you have already calculated
     // so that you don't have to recalculate them several times.
-    todo!()
+    // if n == 0 || n == 1 {
+    //     return n
+    // }
+
+    // return fibonacci(n - 1) + fibonacci(n - 2);
+    // let mut numbers = vec![0, 1];
+    let mut numbers = Vec::with_capacity(n as usize);
+    numbers.push(0);
+    numbers.push(1);
+    for i in 2..=n {
+        numbers.push(numbers[(i-1) as usize] + numbers[(i-2) as usize]);
+    }
+    return numbers[n as usize];
 }
 
 #[cfg(test)]

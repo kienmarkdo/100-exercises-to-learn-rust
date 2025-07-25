@@ -2,6 +2,7 @@
 //  accept connections on both of them concurrently, and always reply to clients by sending
 //  the `Display` representation of the `reply` argument as a response.
 use std::fmt::Display;
+use std::sync::Arc;
 use tokio::io::AsyncWriteExt;
 use tokio::net::TcpListener;
 
@@ -10,7 +11,44 @@ where
     // `T` cannot be cloned. How do you share it between the two server tasks?
     T: Display + Send + Sync + 'static,
 {
-    todo!()
+    // TODO:
+
+    // Accept connections on both first and second TcpListener concurrently
+
+    // Send the same reply to ALL clients (not just an echo, but a fixed response)
+
+    // Share a single `reply` value between both server tasks
+
+    // Challenge: Since T doesn't implement Clone, we can't just copy it.
+    //  We need to share it between multiple tasks safely.
+    // How do we get multiple tasks to share ownership of the same data safely?
+    //  We can use `Arc<T>`
+
+    // Wrap the reply in Arc to share it between tasks
+    let reply = Arc::new(reply);
+
+    // Spawn two tasks - one for each listener
+    let handle1 = tokio::spawn(handle_listener(first, Arc::clone(&reply)));
+    let handle2 = tokio::spawn(handle_listener(second, reply));
+
+    // Wait for both tasks to complete
+    let (_, _) = tokio::join!(handle1, handle2);
+}
+
+async fn handle_listener<T>(listener: TcpListener, reply: Arc<T>)
+where
+    T: Display + Send + Sync + 'static,
+{
+    loop {
+        // Accept a connection
+        let (mut socket, _) = listener.accept().await.unwrap();
+
+        // Send the fixed reply
+        let reply_bytes = reply.to_string().into_bytes();
+        let _ = socket.write_all(&reply_bytes).await;
+
+        // Connection automatically closes when socket is dropped
+    }
 }
 
 #[cfg(test)]

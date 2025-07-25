@@ -1,4 +1,7 @@
 // Not much to be exercised on `Sync`, just a thing to remember.
+
+// LEARNING NOTE: Send is "ownership". Sync is whether it is safe to share references between threads.
+
 fn outro() -> &'static str {
     "I have a good understanding of __!"
 }

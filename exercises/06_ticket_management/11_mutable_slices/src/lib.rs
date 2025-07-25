@@ -5,6 +5,18 @@
 mod tests {
     use super::*;
 
+    // fn squared(mut_slice: &mut [i32]) {
+    //     for i in 0..mut_slice.len() {
+    //         mut_slice[i] = mut_slice[i] * mut_slice[i];
+    //     }
+    // }
+
+    fn squared(mut_slice: &mut [i32]) {
+        for i in mut_slice {
+            *i = *i * *i;
+        }
+    }
+
     #[test]
     fn empty() {
         let mut s = vec![];

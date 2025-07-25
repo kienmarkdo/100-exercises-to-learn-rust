@@ -3,8 +3,52 @@
 //  Don't perform any heap allocation. Don't leak any memory.
 
 pub fn sum(v: Vec<i32>) -> i32 {
-    todo!()
+    // split vector into two halves
+    // let (v1, v2) = v.split_at(v.len()/2);
+    // let v1 = v1.to_vec();
+    // let v2 = v2.to_vec();
+    let midpoint = v.len() / 2;
+    let mut sum1 = 0;
+    let mut sum2 = 0;
+
+    // compute the sum of each half in a separate thread
+    std::thread::scope(|scope| {
+        scope.spawn(|| {
+            let first = &v[..midpoint];
+            let first = first.to_vec();
+            sum1 = sum(first);
+        });
+        scope.spawn(|| {
+            let second = &v[midpoint..];
+            let second = second.to_vec();
+            sum2 = sum(second);
+        });
+    });
+
+    // add them together once computation complete
+    sum1 + sum2
+
 }
+
+// pub fn sum(v: Vec<i32>) -> i32 {
+//     let mut l = 0;
+//     let mut r = 0;
+//     let m = v.len()/2;
+//     std::thread::scope(|scope| {
+
+//         scope.spawn(|| {
+//             for i in 0..m {
+//                 l += v[i];
+//             }
+//         });
+//         scope.spawn(|| {
+//             for i in m..v.len() {
+//                 r += v[i];
+//             }
+//         });
+//     });
+//     return l + r;
+// }
 
 #[cfg(test)]
 mod tests {

@@ -15,7 +15,35 @@
 use std::thread;
 
 pub fn sum(v: Vec<i32>) -> i32 {
-    todo!()
+    // Solution: https://github.com/mainmatter/100-exercises-to-learn-rust/blob/solutions/exercises/07_threads/01_threads/src/lib.rs
+
+    // create 2 vectors out of the given vector
+    let (v1, v2) = v.split_at(v.len()/2);
+    let v1 = v1.to_vec();
+    let v2 = v2.to_vec();
+
+    // Option 1
+    // let handle1 = thread::spawn(move || {
+    //     v1.iter().sum()
+    // });
+
+    // let handle2 = thread::spawn(move || {
+    //     v2.iter().sum()
+    // });
+
+    // Option 2
+    let handle1 = thread::spawn(|| {
+        v1.into_iter().sum()
+    });
+
+    let handle2 = thread::spawn(|| {
+        v2.into_iter().sum()
+    });
+
+    let sum1: i32 = handle1.join().unwrap();
+    let sum2: i32 = handle2.join().unwrap();
+
+    sum1 + sum2
 }
 
 #[cfg(test)]

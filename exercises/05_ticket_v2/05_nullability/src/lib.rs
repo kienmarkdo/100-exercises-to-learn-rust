@@ -10,7 +10,7 @@ struct Ticket {
 #[derive(Debug, PartialEq)]
 enum Status {
     ToDo,
-    InProgress { assigned_to: String },
+    InProgress { assigned_to: String, assigned_time: i32 },
     Done,
 }
 
@@ -36,7 +36,20 @@ impl Ticket {
         }
     }
     pub fn assigned_to(&self) -> Option<&String> {
-        todo!()
+        // get who this ticket is assigned to
+        // only return this if Status is in progress
+
+        // Step 1: Check if Status is InProgress
+        // Step 2: If it is InProgress, return who it is assigned to...
+
+        match &self.status {
+            Status::InProgress { assigned_to: assignee, assigned_time} => {
+                println!("This is in progress");
+                Some(&assignee)
+            },
+            _ => None,
+        }
+
     }
 }
 

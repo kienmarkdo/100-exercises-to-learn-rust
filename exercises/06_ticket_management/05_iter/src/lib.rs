@@ -10,6 +10,15 @@ pub struct TicketStore {
     tickets: Vec<Ticket>,
 }
 
+impl IntoIterator for TicketStore {
+    type Item = Ticket;
+    type IntoIter = std::vec::IntoIter<Self::Item>;
+
+    fn into_iter(self) -> Self::IntoIter {
+        self.tickets.into_iter()
+    }
+}
+
 #[derive(Debug, Clone, PartialEq)]
 pub struct Ticket {
     title: TicketTitle,
@@ -33,6 +42,19 @@ impl TicketStore {
 
     pub fn add_ticket(&mut self, ticket: Ticket) {
         self.tickets.push(ticket);
+    }
+
+    // Does not have to be mut. This is a static function.
+    // It can deduce the lifetime of the ticket based on the reference.
+    pub fn iter(&self) -> std::slice::Iter<Ticket> {
+        self.tickets.iter()
+    }
+
+    // &mut to reference mutable references
+    // Create a slice to the vector. Then iterate through slice, it will give us references.
+    // An iterator of reference values.
+    pub fn iter_mut(&mut self) -> std::slice::IterMut<Ticket> {
+        self.tickets.iter_mut()
     }
 }
 
