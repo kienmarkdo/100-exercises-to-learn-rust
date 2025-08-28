@@ -31,6 +31,11 @@ impl TicketStore {
     pub fn add_ticket(&mut self, ticket: Ticket) {
         self.tickets.push(ticket);
     }
+
+    pub fn in_progress(&self) -> impl Iterator<Item = &Ticket> {
+        self.tickets.iter()
+            .filter(|current_ticket| current_ticket.status == Status::InProgress)
+    }
 }
 
 #[cfg(test)]
@@ -61,3 +66,12 @@ mod tests {
         assert_eq!(in_progress_tickets[0], &in_progress);
     }
 }
+
+
+/*
+impl TicketStore {
+    pub fn to_dos(&self) -> impl Iterator<Item = &Ticket> { // return stm that is an impl trait for Ticket
+        self.tickets.iter().filter(|t| t.status == Status::ToDo)
+    }
+}
+ */

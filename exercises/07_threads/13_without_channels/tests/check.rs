@@ -7,7 +7,7 @@ use without_channels::store::TicketStore;
 
 #[test]
 fn works() {
-    let store = todo!();
+    let store = Arc::new(RwLock::new(TicketStore::new())); // TODO: everyone has access to the store with Arc. Thread-safe thread counter, if it drops to 0, the contents will be dropped.
 
     let store1 = store.clone();
     let client1 = spawn(move || {
